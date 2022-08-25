@@ -61,3 +61,12 @@ module "ecs" {
   cpu                 = var.cpu
   memory              = var.memory
 }
+
+#---------------------------------
+# S3 Web site
+#---------------------------------
+module "s3_web_site" {
+  source  = "../modules/s3"
+  env     = var.env
+  api_url = "http://${module.lb.lb_dns}/api"
+}

@@ -42,31 +42,9 @@ resource "aws_lb_listener" "lb_listener" {
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Route is not defined!"
-      status_code  = "404"
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "ecs_path_based_route" {
-  listener_arn = aws_lb_listener.lb_listener.arn
-  priority     = 10
-
-  action {
     type = "forward"
     target_group_arn = aws_lb_target_group.ecs_target_group.arn
   }
-
-  condition {
-    path_pattern {
-      values = ["/api/*"]
-    }
-  }
-
 }
 
 #===============================================
@@ -80,6 +58,7 @@ resource "aws_lb_target_group" "ecs_target_group" {
   target_type = "ip"
 
   health_check {
-    port = 4567
+    port = 8080
+    path = "/api"
   }
 }

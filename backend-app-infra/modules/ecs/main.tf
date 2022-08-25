@@ -40,17 +40,16 @@ resource "aws_ecs_task_definition" "my_task_definition" {
 
   # Templates allow us to use the same file for different environments
   container_definitions    = jsonencode([{
-    name         = "todo-backend-site",
-    image        = "moredip/todo-backend-site:${var.app_version}"
-    command      = ["build", "serve"]
+    name         = "simple-api",
+    image        = "franksonteotonho/simple-api:${var.app_version}"
     cpu          = var.cpu,
     memory       = var.memory,
     essential    = true,
     environment  = [{name  = "ENV", value = "${var.env}"}],
     portMappings = [
             {
-                containerPort = 4567,
-                hostPort      = 4567
+                containerPort = 8080,
+                hostPort      = 8080
             }
         ]
   }])
@@ -83,7 +82,7 @@ resource "aws_ecs_service" "my_service" {
 
   load_balancer {
     target_group_arn = var.target_group_lb_arn
-    container_name   = "todo-backend-site"
-    container_port   = 4567
+    container_name   = "simple-api"
+    container_port   = 8080
   }
 }

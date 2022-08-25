@@ -34,8 +34,8 @@ resource "aws_security_group_rule" "lb_sg_http_inbound" {
 resource "aws_security_group_rule" "lb_sg_http_outbound" {
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = 4567
-  to_port                  = 4567
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.ecs_sg.id
   security_group_id        = aws_security_group.lb_sg.id
 }
@@ -57,8 +57,8 @@ resource "aws_security_group" "ecs_sg" {
 resource "aws_security_group_rule" "ecs_sg_http_inbound" {
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 4567
-  to_port                  = 4567
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.lb_sg.id
   security_group_id        = aws_security_group.ecs_sg.id
 }
