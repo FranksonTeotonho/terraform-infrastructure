@@ -6,7 +6,7 @@ data "aws_subnets" "public_subnets" {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
-  
+
   filter {
     name   = "tag:type"
     values = ["Public"]
@@ -42,7 +42,7 @@ resource "aws_lb_listener" "lb_listener" {
   protocol          = "HTTP"
 
   default_action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = aws_lb_target_group.ecs_target_group.arn
   }
 }

@@ -6,7 +6,7 @@ data "aws_subnets" "private_subnets" {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
-  
+
   filter {
     name   = "tag:type"
     values = ["Private"]
@@ -39,19 +39,19 @@ resource "aws_ecs_task_definition" "my_task_definition" {
   memory                   = var.memory
 
   # Templates allow us to use the same file for different environments
-  container_definitions    = jsonencode([{
-    name         = "simple-api",
-    image        = "franksonteotonho/simple-api:${var.app_version}"
-    cpu          = var.cpu,
-    memory       = var.memory,
-    essential    = true,
-    environment  = [{name  = "ENV", value = "${var.env}"}],
+  container_definitions = jsonencode([{
+    name        = "simple-api",
+    image       = "franksonteotonho/simple-api:${var.app_version}"
+    cpu         = var.cpu,
+    memory      = var.memory,
+    essential   = true,
+    environment = [{ name = "ENV", value = "${var.env}" }],
     portMappings = [
-            {
-                containerPort = 8080,
-                hostPort      = 8080
-            }
-        ]
+      {
+        containerPort = 8080,
+        hostPort      = 8080
+      }
+    ]
   }])
 
   tags = {

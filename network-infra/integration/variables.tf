@@ -3,5 +3,5 @@ variable "aws_region" {
 }
 
 variable "env" {
-    default = "int"
+  default = "int"
 }

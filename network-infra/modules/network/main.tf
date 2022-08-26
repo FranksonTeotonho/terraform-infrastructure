@@ -44,7 +44,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone = data.aws_availability_zones.available_azs.names[count.index]
 
   tags = {
-    Name = "${var.env}-private-subnet-${count.index}",
+    Name       = "${var.env}-private-subnet-${count.index}",
     type       = "Private",
     managed_by = "Terraform"
   }
@@ -86,7 +86,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name = "${var.env}-public-rt",
+    Name       = "${var.env}-public-rt",
     managed_by = "Terraform"
   }
 }
@@ -105,12 +105,12 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = element(aws_nat_gateway.nat.*.id, count.index)
   }
 
   tags = {
-    Name = "${var.env}-private-rt",
+    Name       = "${var.env}-private-rt",
     managed_by = "Terraform"
   }
 }
