@@ -1,18 +1,9 @@
 #---------------------------------
-# Data source - VPC
-#---------------------------------
-data "aws_vpc" "selected_vpc" {
-  filter {
-    name   = "tag:Name"
-    values = ["${var.env}-vpc"]
-  }
-}
-#---------------------------------
 # SG - Load Balancer
 #---------------------------------
 resource "aws_security_group" "lb_sg" {
   name   = "${var.env}-lb-sg"
-  vpc_id = data.aws_vpc.selected_vpc.id
+  vpc_id = var.vpc_id
 
   tags = {
     env        = var.env
@@ -45,7 +36,7 @@ resource "aws_security_group_rule" "lb_sg_http_outbound" {
 #---------------------------------
 resource "aws_security_group" "ecs_sg" {
   name   = "${var.env}-ecs-sg"
-  vpc_id = data.aws_vpc.selected_vpc.id
+  vpc_id = var.vpc_id
 
   tags = {
     env        = var.env

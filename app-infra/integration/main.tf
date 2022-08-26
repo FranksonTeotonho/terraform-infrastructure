@@ -1,3 +1,8 @@
+#---------------------------------
+# Application infrastructure para o ambiente de Integration
+# - Os modulos podem ser reutilizados para a criação de mais ambientes como Staging e Production.
+# - O projeto utiliza recursos previamente criados no support-infra
+#---------------------------------
 terraform {
   required_providers {
     aws = {
@@ -10,11 +15,13 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
+  profile = "terraform_user"
 }
 
 #---------------------------------
 # Data source - VPC
+# Busca a VPC já criada e deixa disponivel no projeto
 #---------------------------------
 data "aws_vpc" "selected_vpc" {
   filter {
@@ -25,6 +32,7 @@ data "aws_vpc" "selected_vpc" {
 
 #---------------------------------
 # Data source - Load Balancer SG
+# Busca o SG já criada e deixa disponivel no projeto
 #---------------------------------
 data "aws_security_group" "lb_sg" {
   name = "${var.env}-lb-sg"
@@ -32,6 +40,7 @@ data "aws_security_group" "lb_sg" {
 
 #---------------------------------
 # Data source - ECS SG
+# Busca o SG já criada e deixa disponivel no projeto
 #---------------------------------
 data "aws_security_group" "ecs_sg" {
   name = "${var.env}-ecs-sg"
@@ -39,6 +48,7 @@ data "aws_security_group" "ecs_sg" {
 
 #---------------------------------
 # Load Balancer Module
+# - Application load balancer com um target para ser usado com o ECS
 #---------------------------------
 module "lb" {
   source              = "../modules/load_balancer"
@@ -49,6 +59,7 @@ module "lb" {
 
 #---------------------------------
 # ECS Module
+# - ECS Cluter, Task Definition e Service. Utiliza Fargat.
 #---------------------------------
 module "ecs" {
   source              = "../modules/ecs"
@@ -64,6 +75,7 @@ module "ecs" {
 
 #---------------------------------
 # S3 Web site
+# - S3 Bucket private, S3 objects com o site static (HTML e JavaScript)
 #---------------------------------
 module "s3_web_site" {
   source  = "../modules/s3"
@@ -73,6 +85,8 @@ module "s3_web_site" {
 
 #---------------------------------
 # CloudFront
+# - Cria CloudFront distribution com rotas para o frontend(/) e backend (/api)
+# - Cria ACL para acesso do s3 bucket
 #---------------------------------
 module "cloudfront" {
   source                         = "../modules/cloudfront"

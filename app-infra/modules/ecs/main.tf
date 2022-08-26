@@ -27,9 +27,9 @@ resource "aws_ecs_cluster" "my_cluster" {
 
 #===============================================
 # ECS Task Definition
-# - Fargate provides a self-managed cluster
-# - The network mode awsvpc allow us to use VPC resources such as SGs and Subnets
-# - For simplicity, our container will consumes the memory and cpu provided by the task
+# - Fargate prove um auto-gerenciado (self-managed) cluster
+# - O network mode awsvpc permite o uso de recursos como VPC, SGs e Subnets
+# - Por simplicidade, nosso container consumir o mesmo quantidade CPU e quantidade de memoria provido pela task definition.
 #===============================================
 resource "aws_ecs_task_definition" "my_task_definition" {
   family                   = "${var.env}_task_definition"
@@ -62,10 +62,10 @@ resource "aws_ecs_task_definition" "my_task_definition" {
 
 #===============================================
 # ECS Service
-# - Number of nodes can be defined when calling the module, it can be different per environment
-# - Services / Tasks are spread in different private subnets
-# - SGs are defined by environment, I made it a variable to allow attachment of new SGs
-# - Load balancer is set in the module call
+# - Numero de nós podem ser definidos na chamada do modulo, pode ser diferente por ambiente.
+# - Services / Tasks estão espalhados em diferentes subnetes privadas.
+# - SGs são definidas por ambiente, fiz a criação dessa variavel para permitir anexação de novas SGs quando requirido.
+# - Load balancer é definido na chamada do modulo
 #===============================================
 resource "aws_ecs_service" "my_service" {
   name            = "${var.env}_service"
